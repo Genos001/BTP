@@ -27,8 +27,20 @@ count = 0
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(btn_pin, GPIO.IN)
 mixer.init()
-engine.say('Hello Boys') 
-engine.runAndWait()
+# engine.say('Hello Boys') 
+# engine.runAndWait()
+
+def getColorName(R,G,B):
+    index=["color_name","R","G","B"]
+    csv = pd.read_csv('colorsV4.csv', names=index, header=None,encoding='latin-1')
+    minimum = 10000
+    for i in range(len(csv)):
+        d = abs(R- int(csv.loc[i,"R"])) + abs(G- int(csv.loc[i,"G"]))+ abs(B- int(csv.loc[i,"B"]))
+        if(d<=minimum):
+            minimum = d
+            cname = csv.loc[i,"color_name"]
+    return cname
+
 
 def func_mode2():
 
@@ -132,27 +144,49 @@ def func_mode1():
     red_mask = cv2.inRange(hsv_frame, low_red, high_red)
     red = cv2.countNonZero(red_mask)
 
-    new = max(pink, green, yell, red, blue, vio)
-    print (new)
-    if new==pink:
+    low_ora = np.array([8, 160, 130])
+    high_ora = np.array([19, 250, 220])
+    ora_mask = cv2.inRange(hsv_frame, low_ora, high_ora)
+    ora = cv2.countNonZero(ora_mask)
+
+    margin = max(pink, green, yell, red, blue, vio, ora)
+    print (margin)
+    if margin==pink:
         print("pink")
         new = "pink"
-    elif new==green:
+    elif margin==green:
         print("green")
         new = "green"
-    elif new==yell:
+    elif margin==yell:
         print("yellow")
         new = "yellow"
-    elif new==red:
+    elif margin==red:
         print("red")
         new = "red"
-    elif new==blue:
+    elif margin==blue:
         print("blue")
         new = "blue"
+    elif margin==ora:
+        print("orange")
+        new = "orange"
     else:
         print("vio")
         new = "violet"
     #print (new)
+
+    # cv2.rectangle(img, (309,229), (329,249), (0,255,0), 1)
+    if(margin < 30):
+        roi = img[230:249, 310:329]
+        avg1 = np.average(roi, axis=0)
+        avg2 = np.average(avg1, axis=0)
+        avg2_int = avg2.astype(int)
+        avg2_int = avg2_int[::-1]        
+        r = avg2_int[0]
+        g = avg2_int[1]
+        b = avg2_int[2]
+        new = getColorName(r,g,b)
+
+
     mixer.music.load('music/' + new +'.mp3')
         channel = mixer.music.play()
         while mixer.music.get_busy():
