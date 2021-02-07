@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 import time
 import RPi.GPIO as GPIO
-import pyttsx3
-# from pygame import mixer
+# import pyttsx3
+from pygame import mixer
 
 
 
@@ -26,7 +26,7 @@ engine.setProperty('volume',1.0)
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(btn_pin, GPIO.IN)
-# mixer.init()
+mixer.init()
 engine.say('Hello Boys') 
 engine.runAndWait()
 
@@ -54,23 +54,39 @@ def func_mode2():
 
     if(Red > Blue and Red > 50):
         print("red")
-        engine.say('red') 
-        engine.runAndWait() 
+        mixer.music.load('music/' + "red" +'.mp3')
+        channel = mixer.music.play()
+        while mixer.music.get_busy():
+            time.sleep(0.1)
+        # engine.say('red') 
+        # engine.runAndWait() 
 
     elif(Blue > Red and Blue> 50 ):
         print("blue")
-        engine.say('blue') 
-        engine.runAndWait() 
+        mixer.music.load('music/' + "blue" +'.mp3')
+        channel = mixer.music.play()
+        while mixer.music.get_busy():
+            time.sleep(0.1)
+        # engine.say('blue') 
+        # engine.runAndWait() 
 
     elif(Ph > 2000 ):
         print("ph paper ",Ph )
-        engine.say('paper detected') 
-        engine.runAndWait() 
+        mixer.music.load('music/' + "phpaper" +'.mp3')
+        channel = mixer.music.play()
+        while mixer.music.get_busy():
+            time.sleep(0.1)
+        # engine.say('paper detected') 
+        # engine.runAndWait() 
 
     else:
         print("no")
-        engine.say('no paper detected') 
-        engine.runAndWait() 
+        mixer.music.load('music/' + "nopaperfound" +'.mp3')
+        channel = mixer.music.play()
+        while mixer.music.get_busy():
+            time.sleep(0.1)
+        # engine.say('no paper detected') 
+        # engine.runAndWait() 
 
 
 
@@ -137,9 +153,17 @@ def func_mode1():
         print("vio")
         new = "violet"
     #print (new)
-    engine.say(new) 
-    engine.runAndWait() 
+    mixer.music.load('music/' + new +'.mp3')
+        channel = mixer.music.play()
+        while mixer.music.get_busy():
+            time.sleep(0.1)
+    # engine.say(new) 
+    # engine.runAndWait() 
 
+mixer.music.load('music/' + "press" +'.mp3')
+channel = mixer.music.play()
+while mixer.music.get_busy():
+            time.sleep(0.1)
 
 while True:
     success, img = cap.read()
@@ -170,13 +194,21 @@ while True:
                 mode = not mode
                 if(mode):
                     print("changed mode 1")
-                    engine.say('color detection mode') 
-                    engine.runAndWait() 
+                    mixer.music.load('music/' + "colordetectionmode" +'.mp3')
+                    channel = mixer.music.play()
+                    while mixer.music.get_busy():
+                        time.sleep(0.1)
+                    # engine.say('color detection mode') 
+                    # engine.runAndWait() 
 
                 else:
                     print("changed mode 2")
-                    engine.say('paper detection mode') 
-                    engine.runAndWait() 
+                    mixer.music.load('music/' + "paperdetectionmode" +'.mp3')
+                    channel = mixer.music.play()
+                    while mixer.music.get_busy():
+                        time.sleep(0.1)
+                    # engine.say('paper detection mode') 
+                    # engine.runAndWait() 
             count=0
             st_time=-1;
 

@@ -6,11 +6,11 @@ import numpy as np
 import time
 import RPi.GPIO as GPIO
 #from PIL import Image
-# from pygame import mixer
+from pygame import mixer
 import shlex
 from subprocess import Popen, PIPE
 import re
-import pyttsx3
+# import pyttsx3
 
 
 
@@ -27,7 +27,7 @@ engine.setProperty('rate', 130)
 engine.setProperty('volume',1.0)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(btn_pin, GPIO.IN)
-# mixer.init()
+mixer.init()
 
 
 
@@ -91,6 +91,15 @@ while True:
                 warped, output, err = bird_view(image)
                 if(err==0):
                     print("screen not found try again")
+                    mixer.music.load('music/' + "noscreenfound" +'.mp3')
+                    channel = mixer.music.play()
+                    while mixer.music.get_busy():
+                        time.sleep(0.1)
+                    mixer.music.load('music/' + "tryagain" +'.mp3')
+                    channel = mixer.music.play()
+                    while mixer.music.get_busy():
+                        time.sleep(0.1)
+
                     continue
                 
                 height, width, channels = output.shape
@@ -113,6 +122,15 @@ while True:
                                                       cv2.THRESH_BINARY, 11, 2)
                 except:
                     print("adaptive threshold error")
+                    mixer.music.load('music/' + "error" +'.mp3')
+                    channel = mixer.music.play()
+                    while mixer.music.get_busy():
+                        time.sleep(0.1)
+
+                    mixer.music.load('music/' + "tryagain" +'.mp3')
+                    channel = mixer.music.play()
+                    while mixer.music.get_busy():
+                        time.sleep(0.1)
 
                 #cv2.imshow('output',output)
                 kernel = np.ones((4,4),np.uint8)
@@ -133,27 +151,53 @@ while True:
                 length = len(temp)
                 if(length < 3):
                     print("seg fault try again")
+                    mixer.music.load('music/' + "error" +'.mp3')
+                    channel = mixer.music.play()
+                    while mixer.music.get_busy():
+                        time.sleep(0.1)
+
+                    mixer.music.load('music/' + "tryagain" +'.mp3')
+                    channel = mixer.music.play()
+                    while mixer.music.get_busy():
+                        time.sleep(0.1)
                     continue
-                indices = [0,length-2,length-1,length]
+
+                indices = [0,length-2,length]
                 parts = [temp[i:j] for i,j in zip(indices, indices[1:]+[None])]
                 
                 print(temp)
                 print(parts)
-                engine.say(parts[0]) 
-                engine.runAndWait()
+
+                mixer.music.load('music/' + str(parts[0]) +'.mp3')
+                channel = mixer.music.play()
+                while mixer.music.get_busy():
+                    time.sleep(0.1) 
+
+                mixer.music.load('music/p' + str(parts[1]) +'.mp3')
+                channel = mixer.music.play()
+                while mixer.music.get_busy():
+                    time.sleep(0.1)
+
+                mixer.music.load('music/' + "grams" +'.mp3')
+                channel = mixer.music.play()
+                while mixer.music.get_busy():
+                    time.sleep(0.1)
+
+                # engine.say(parts[0]) 
+                # engine.runAndWait()
                 
-                engine.setProperty('rate', 250)
-                engine.say('point') 
-                engine.runAndWait()
+                # engine.setProperty('rate', 250)
+                # engine.say('point') 
+                # engine.runAndWait()
                 
-                engine.say(parts[1]) 
-                engine.runAndWait()
+                # engine.say(parts[1]) 
+                # engine.runAndWait()
                 
-                engine.say(parts[2]) 
-                engine.runAndWait()
+                # engine.say(parts[2]) 
+                # engine.runAndWait()
                 
-                engine.say('gram') 
-                engine.runAndWait()
+                # engine.say('gram') 
+                # engine.runAndWait()
                 #exit_code = process.wait()
 
 
