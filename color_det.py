@@ -20,9 +20,9 @@ cap.set(4, frameHeight)
 prev_result = "nill"
 count = 0
 
-engine = pyttsx3.init('espeak')
-engine.setProperty('rate', 160)
-engine.setProperty('volume',1.0)
+# engine = pyttsx3.init('espeak')
+# engine.setProperty('rate', 160)
+# engine.setProperty('volume',1.0)
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(btn_pin, GPIO.IN)
