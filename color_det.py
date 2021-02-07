@@ -3,10 +3,7 @@ import numpy as np
 import pandas as pd
 import time
 import RPi.GPIO as GPIO
-# import pyttsx3
 from pygame import mixer
-
-
 
 
 btn_pin = 15
@@ -20,15 +17,20 @@ cap.set(4, frameHeight)
 prev_result = "nill"
 count = 0
 
-# engine = pyttsx3.init('espeak')
-# engine.setProperty('rate', 160)
-# engine.setProperty('volume',1.0)
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(btn_pin, GPIO.IN)
 mixer.init()
-# engine.say('Hello Boys') 
-# engine.runAndWait()
+
+speakup('tone3')
+speakup('colordetectionmode')
+
+
+def speakup(val):
+    mixer.music.load('music/' + val +'.mp3')
+    channel = mixer.music.play()
+    while mixer.music.get_busy():
+        time.sleep(0.1)
 
 def getColorName(R,G,B):
     index=["color_name","R","G","B"]
@@ -43,8 +45,9 @@ def getColorName(R,G,B):
 
 
 def func_mode2():
-
-    hsv_frame = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    roi = img[100:350, 150:490]
+    # cv2.rectangle(img, (150,100), (490,350), (0,255,0), 1)
+    hsv_frame = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
      # Red color
     low_red = np.array([0, 60, 105])
@@ -66,51 +69,31 @@ def func_mode2():
 
     if(Red > Blue and Red > 50):
         print("red")
-        mixer.music.load('music/' + "red" +'.mp3')
-        channel = mixer.music.play()
-        while mixer.music.get_busy():
-            time.sleep(0.1)
-        # engine.say('red') 
-        # engine.runAndWait() 
+        speakup('red')
 
     elif(Blue > Red and Blue> 50 ):
         print("blue")
-        mixer.music.load('music/' + "blue" +'.mp3')
-        channel = mixer.music.play()
-        while mixer.music.get_busy():
-            time.sleep(0.1)
-        # engine.say('blue') 
-        # engine.runAndWait() 
+        speakup('blue') 
 
     elif(Ph > 2000 ):
         print("ph paper ",Ph )
-        mixer.music.load('music/' + "phpaper" +'.mp3')
-        channel = mixer.music.play()
-        while mixer.music.get_busy():
-            time.sleep(0.1)
-        # engine.say('paper detected') 
-        # engine.runAndWait() 
+        speakup('phpaper') 
 
     else:
         print("no")
-        mixer.music.load('music/' + "nopaperfound" +'.mp3')
-        channel = mixer.music.play()
-        while mixer.music.get_busy():
-            time.sleep(0.1)
-        # engine.say('no paper detected') 
-        # engine.runAndWait() 
+        speakup('nopaperfound') 
 
 
 
 def func_mode1():
 
     
-    roi = img[150:350, 200:400]
+    # roi = img[150:350, 200:400]
+    roi = img[100:350, 150:490]
     #cv2.imshow('CAMERAa',roi)
 
     hsv_frame = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
-     # Red color
     low_pink = np.array([138, 50, 60])
     high_pink = np.array([166, 255, 186])
     pink_mask = cv2.inRange(hsv_frame, low_pink, high_pink)
@@ -175,7 +158,7 @@ def func_mode1():
     #print (new)
 
     # cv2.rectangle(img, (309,229), (329,249), (0,255,0), 1)
-    if(margin < 30):
+    if(margin < 500):
         roi = img[230:249, 310:329]
         avg1 = np.average(roi, axis=0)
         avg2 = np.average(avg1, axis=0)
@@ -186,19 +169,9 @@ def func_mode1():
         b = avg2_int[2]
         new = getColorName(r,g,b)
 
+    speakup(new) 
 
-    mixer.music.load('music/' + new +'.mp3')
-        channel = mixer.music.play()
-        while mixer.music.get_busy():
-            time.sleep(0.1)
-    # engine.say(new) 
-    # engine.runAndWait() 
-
-mixer.music.load('music/' + "press" +'.mp3')
-channel = mixer.music.play()
-while mixer.music.get_busy():
-            time.sleep(0.1)
-
+#speakup('pass')
 while True:
     success, img = cap.read()
     cv2.rectangle(img, (200,150), (400,350), (0,255,0), 1) 
@@ -206,11 +179,11 @@ while True:
     if (GPIO.input(btn_pin) == False):
         time.sleep(0.01)
         if (GPIO.input(btn_pin) == False):
-            time.sleep(0.3)
-            if (GPIO.input(btn_pin) == True):
-                count+=1
-                if(st_time==-1):
-                    st_time = time.time()
+            time.sleep(0.2)
+            # if (GPIO.input(btn_pin) == True):
+            count+=1
+            if(st_time==-1):
+                st_time = time.time()
 
     if(st_time!=-1):
         if(time.time()-st_time>1 and time.time()-st_time<1.5):
@@ -228,21 +201,11 @@ while True:
                 mode = not mode
                 if(mode):
                     print("changed mode 1")
-                    mixer.music.load('music/' + "colordetectionmode" +'.mp3')
-                    channel = mixer.music.play()
-                    while mixer.music.get_busy():
-                        time.sleep(0.1)
-                    # engine.say('color detection mode') 
-                    # engine.runAndWait() 
+                    speakup('colordetectionmode')
 
                 else:
                     print("changed mode 2")
-                    mixer.music.load('music/' + "paperdetectionmode" +'.mp3')
-                    channel = mixer.music.play()
-                    while mixer.music.get_busy():
-                        time.sleep(0.1)
-                    # engine.say('paper detection mode') 
-                    # engine.runAndWait() 
+                    speakup('paperdetectionmode')
             count=0
             st_time=-1;
 
@@ -253,8 +216,6 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     
-
-    #img = cv2.flip(img,1)
     
     cv2.imshow('CAMERA',img)
         
