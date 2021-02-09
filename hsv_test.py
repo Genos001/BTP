@@ -80,7 +80,7 @@ while True:
         print(thearray)
         
         # Also save this array as penval.npy
-        np.save('hsv_value',thearray)
+        #np.save('hsv_value',thearray)
         break
 
 # Release the camera & destroy the windows.    
