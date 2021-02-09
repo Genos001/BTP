@@ -34,6 +34,7 @@ def speakup(val):
     #     time.sleep(0.1)
     subprocess.call(['vlc']+['music/'+ val +'.mp3']+['vlc://quit'])
 
+press('press1')
 
 speakup('tone3')
 
