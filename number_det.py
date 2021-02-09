@@ -5,8 +5,9 @@ import cv2
 import numpy as np
 import time
 import RPi.GPIO as GPIO
-from pygame import mixer
+# from pygame import mixer
 import shlex
+import subprocess
 from subprocess import Popen, PIPE
 import re
 
@@ -22,17 +23,19 @@ cap.set(4, frameHeight)
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(btn_pin, GPIO.IN)
-mixer.init()
+# mixer.init()
+
+
+
+def speakup(val):
+    # mixer.music.load('music/' + val +'.mp3')
+    # channel = mixer.music.play()
+    # while mixer.music.get_busy():
+    #     time.sleep(0.1)
+    subprocess.call(['vlc']+['music/'+ val +'.mp3']+['vlc://quit'])
 
 
 speakup('tone3')
-
-def speakup(val):
-    mixer.music.load('music/' + val +'.mp3')
-    channel = mixer.music.play()
-    while mixer.music.get_busy():
-        time.sleep(0.1)
-
 
 def bird_view(image):
     image = imutils.resize(image, height=500)

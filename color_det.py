@@ -3,7 +3,9 @@ import numpy as np
 import pandas as pd
 import time
 import RPi.GPIO as GPIO
-from pygame import mixer
+import subprocess
+import shlex
+#from pygame import mixer
 
 
 btn_pin = 15
@@ -20,17 +22,18 @@ count = 0
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(btn_pin, GPIO.IN)
-mixer.init()
+#mixer.init()
 
 speakup('tone3')
 speakup('colordetectionmode')
 
 
 def speakup(val):
-    mixer.music.load('music/' + val +'.mp3')
-    channel = mixer.music.play()
-    while mixer.music.get_busy():
-        time.sleep(0.1)
+    # mixer.music.load('music/' + val +'.mp3')
+    # channel = mixer.music.play()
+    # while mixer.music.get_busy():
+    #     time.sleep(0.1)
+    subprocess.call(['vlc']+['music/'+ val +'.mp3']+['vlc://quit'])
 
 def getColorName(R,G,B):
     index=["color_name","R","G","B"]
