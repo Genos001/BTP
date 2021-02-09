@@ -96,7 +96,6 @@ while True:
                 if(err==0):
                     print("screen not found try again")
                     speakup('noscreenfound')
-                    speakup('tryagain')
                     continue
                 
                 height, width, channels = output.shape
@@ -113,7 +112,6 @@ while True:
                 except:
                     print("adaptive threshold error")
                     speakup('error')
-                    speakup('tryagain')
 
                 #cv2.imshow('output',output)
                 kernel = np.ones((4,4),np.uint8)
@@ -135,7 +133,6 @@ while True:
                 if(length < 3):
                     print("seg fault try again")
                     speakup('error')
-                    speakup('tryagain')
                     continue
 
                 indices = [0,length-2,length]

@@ -225,7 +225,7 @@ while True:
         break
     
     
-    cv2.imshow('CAMERA',img)
+    #cv2.imshow('CAMERA',img)
         
 cap.release()
 

@@ -11,9 +11,9 @@ import requests
 # 	print(i)
 
 
-url = 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=' +'pressbuttontodetectweight'+ '&tl=en&total=1&idx=0&textlen=9'
+url = 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=' +'orange'+ '&tl=en&total=1&idx=0&textlen=9'
 r = requests.get(url, allow_redirects=True)
 
-open( 'press1.mp3', 'wb').write(r.content)
+open( 'orange.mp3', 'wb').write(r.content)
 
 print ("end")
