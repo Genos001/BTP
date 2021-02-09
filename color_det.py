@@ -24,9 +24,6 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(btn_pin, GPIO.IN)
 #mixer.init()
 
-speakup('tone3')
-speakup('press')
-speakup('colordetectionmode')
 
 
 def speakup(val):
@@ -36,6 +33,12 @@ def speakup(val):
     #     time.sleep(0.1)
     #subprocess.call(['vlc']+['music/'+ val +'.mp3']+['vlc://quit'])
     subprocess.call(['mpg321']+['music/'+ val +'.mp3'])
+
+
+speakup('tone3')
+speakup('press')
+speakup('colordetectionmode')
+
 
 def getColorName(R,G,B):
     index=["color_name","R","G","B"]

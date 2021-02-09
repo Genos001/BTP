@@ -32,11 +32,12 @@ def speakup(val):
     # channel = mixer.music.play()
     # while mixer.music.get_busy():
     #     time.sleep(0.1)
-    subprocess.call(['vlc']+['music/'+ val +'.mp3']+['vlc://quit'])
-
-press('press1')
+    #subprocess.call(['vlc']+['music/'+ val +'.mp3']+['vlc://quit'])
+    subprocess.call(['mpg321']+['music/'+ val +'.mp3'])
 
 speakup('tone3')
+speakup('press1')
+
 
 def bird_view(image):
     image = imutils.resize(image, height=500)
