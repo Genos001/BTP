@@ -26,14 +26,9 @@ GPIO.setup(btn_pin, GPIO.IN)
 # mixer.init()
 
 
-
+print("darkness")
 def speakup(val):
-    # mixer.music.load('music/' + val +'.mp3')
-    # channel = mixer.music.play()
-    # while mixer.music.get_busy():
-    #     time.sleep(0.1)
-    #subprocess.call(['vlc']+['music/'+ val +'.mp3']+['vlc://quit'])
-    subprocess.call(['mpg321']+['music/'+ val +'.mp3'])
+    subprocess.call(['mpg321']+['/home/pi/BTP/music/'+ val +'.mp3'])
 
 speakup('tone3')
 speakup('press1')
@@ -118,7 +113,7 @@ while True:
                 output = cv2.morphologyEx(output, cv2.MORPH_CLOSE, kernel)
                 kernel = np.ones((2,2),np.uint8)
                 output = cv2.erode(output,kernel,iterations = 1)
-                cv2.imwrite(r'/home/pi/a.jpg', output)
+                cv2.imwrite(r'/home/pi/BTP/a.jpg', output)
                 #cv2.imshow('output2',output)
             
                 cmd = "ssocr --number-digits=-1 --charset=digits -T a.jpg"

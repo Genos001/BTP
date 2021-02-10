@@ -27,15 +27,10 @@ GPIO.setup(btn_pin, GPIO.IN)
 
 
 def speakup(val):
-    # mixer.music.load('music/' + val +'.mp3')
-    # channel = mixer.music.play()
-    # while mixer.music.get_busy():
-    #     time.sleep(0.1)
-    #subprocess.call(['vlc']+['music/'+ val +'.mp3']+['vlc://quit'])
-    subprocess.call(['mpg321']+['music/'+ val +'.mp3'])
+    subprocess.call(['mpg321']+['/home/pi/BTP/music/'+ val +'.mp3'])
 
 
-speakup('tone3')
+speakup('tone4')
 speakup('press')
 speakup('colordetectionmode')
 
@@ -182,7 +177,7 @@ def func_mode1():
 #speakup('pass')
 while True:
     success, img = cap.read()
-    cv2.rectangle(img, (200,150), (400,350), (0,255,0), 1) 
+    #cv2.rectangle(img, (200,150), (400,350), (0,255,0), 1) 
     time.sleep(0.1)
     if (GPIO.input(btn_pin) == False):
         time.sleep(0.01)
