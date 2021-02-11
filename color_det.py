@@ -28,6 +28,7 @@ GPIO.setup(btn_pin, GPIO.IN)
 
 def speakup(val):
     subprocess.call(['mpg321']+['/home/pi/BTP/music/'+ val +'.mp3'])
+    return 
 
 
 speakup('tone4')
@@ -59,8 +60,8 @@ def func_mode2():
     Red = cv2.countNonZero(red_mask)
 
     # Blue color
-    low_blue = np.array([70, 58, 15])
-    high_blue = np.array([125, 235, 190])
+    low_blue = np.array([24, 10, 43])
+    high_blue = np.array([125, 138, 91])
     blue_mask = cv2.inRange(hsv_frame, low_blue, high_blue)
     Blue = cv2.countNonZero(blue_mask)
 
@@ -70,11 +71,11 @@ def func_mode2():
     green_mask = cv2.inRange(hsv_frame, low_green, high_green)
     Ph = cv2.countNonZero(green_mask)
 
-    if(Red > Blue and Red > 50):
+    if(Red > Blue and Red > 500):
         print("red")
         speakup('red')
 
-    elif(Blue > Red and Blue> 50 ):
+    elif(Blue > Red and Blue> 500 ):
         print("blue")
         speakup('blue') 
 
@@ -94,6 +95,7 @@ def func_mode1():
     # roi = img[150:350, 200:400]
     roi = img[100:350, 150:490]
     #cv2.imshow('CAMERAa',roi)
+    cv2.rectangle(img, (150,100), (490,350), (0,255,0), 1)
 
     hsv_frame = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
@@ -102,25 +104,25 @@ def func_mode1():
     pink_mask = cv2.inRange(hsv_frame, low_pink, high_pink)
     pink = cv2.countNonZero(pink_mask)
 
-    low_vio = np.array([94, 21, 9])
-    high_vio = np.array([165, 134, 217])
+    low_vio = np.array([0, 0, 0])
+    high_vio = np.array([140, 105,75])
     vio_mask = cv2.inRange(hsv_frame, low_vio, high_vio)
     vio = cv2.countNonZero(vio_mask)
 
 
-    low_yell = np.array([25, 65, 95])
-    high_yell = np.array([47, 125, 195])
+    low_yell = np.array([22, 137, 102])
+    high_yell = np.array([36, 203, 190])
     yell_mask = cv2.inRange(hsv_frame, low_yell, high_yell)
     yell = cv2.countNonZero(yell_mask)
 
-    low_green = np.array([30, 163, 46])
-    high_green = np.array([67, 227,179])
+    low_green = np.array([35, 95, 56])
+    high_green = np.array([67, 215,139])
     green_mask = cv2.inRange(hsv_frame, low_green, high_green)
     green = cv2.countNonZero(green_mask)
 
 
-    low_blue = np.array([91, 185, 121])
-    high_blue = np.array([129, 255, 201])
+    low_blue = np.array([95, 42, 61])
+    high_blue = np.array([112, 227, 170])
     blue_mask = cv2.inRange(hsv_frame, low_blue, high_blue)
     blue = cv2.countNonZero(blue_mask)
 
@@ -130,54 +132,51 @@ def func_mode1():
     red_mask = cv2.inRange(hsv_frame, low_red, high_red)
     red = cv2.countNonZero(red_mask)
 
-    low_ora = np.array([8, 160, 130])
-    high_ora = np.array([19, 250, 220])
+    low_ora = np.array([2, 60, 117])
+    high_ora = np.array([29, 176, 185])
     ora_mask = cv2.inRange(hsv_frame, low_ora, high_ora)
     ora = cv2.countNonZero(ora_mask)
+    
+    low_whi = np.array([0, 0, 118])
+    high_whi = np.array([165, 39, 176])
+    whi_mask = cv2.inRange(hsv_frame, low_whi, high_whi)
+    whi = cv2.countNonZero(whi_mask)
 
     margin = max(pink, green, yell, red, blue, vio, ora)
     print (margin)
     if margin==pink:
-        print("pink")
         new = "pink"
     elif margin==green:
-        print("green")
         new = "green"
     elif margin==yell:
-        print("yellow")
         new = "yellow"
     elif margin==red:
-        print("red")
         new = "red"
     elif margin==blue:
-        print("blue")
         new = "blue"
     elif margin==ora:
-        print("orange")
         new = "orange"
     else:
-        print("vio")
         new = "violet"
     #print (new)
 
     # cv2.rectangle(img, (309,229), (329,249), (0,255,0), 1)
-    if(margin < 500):
-        roi = img[230:249, 310:329]
-        avg1 = np.average(roi, axis=0)
-        avg2 = np.average(avg1, axis=0)
-        avg2_int = avg2.astype(int)
-        avg2_int = avg2_int[::-1]        
-        r = avg2_int[0]
-        g = avg2_int[1]
-        b = avg2_int[2]
-        new = getColorName(r,g,b)
-
+    if(margin < 500 and whi >=3000 ):
+        new='white'
+        print(whi)
+    else:
+        print("new color range")
+        new='tryagain'
+    
+    print(new)
     speakup(new) 
 
 #speakup('pass')
 while True:
     success, img = cap.read()
     #cv2.rectangle(img, (200,150), (400,350), (0,255,0), 1) 
+    cv2.rectangle(img, (150,100), (490,350), (0,255,0), 1)
+
     time.sleep(0.1)
     if (GPIO.input(btn_pin) == False):
         time.sleep(0.01)
