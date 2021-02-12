@@ -26,11 +26,18 @@ GPIO.setup(btn_pin, GPIO.IN)
 # mixer.init()
 
 
-
+print("darkness")
 def speakup(val):
+<<<<<<< HEAD
     subprocess.call(['mpg321']+['music/'+ val +'.mp3'])
 
 speakup('tone3')
+=======
+    subprocess.call(['mpg321']+['/home/pi/BTP/music/'+ val +'.mp3'])
+    return
+
+speakup('tone4')
+>>>>>>> d48df5adac27977eb281b8a425602412504d3c83
 speakup('press1')
 
 
@@ -65,7 +72,7 @@ def bird_view(image):
             output_0 = four_point_transform(image, displayCnt.reshape(4, 2))
 
             hsv_frame = cv2.cvtColor(output_0, cv2.COLOR_BGR2HSV)
-            low_green = np.array([70, 229, 188])
+            low_green = np.array([70, 157, 138])
             high_green = np.array([152, 255, 255])
             green_mask = cv2.inRange(hsv_frame, low_green, high_green)
             val = cv2.countNonZero(green_mask)
@@ -113,7 +120,7 @@ while True:
                 output = cv2.morphologyEx(output, cv2.MORPH_CLOSE, kernel)
                 kernel = np.ones((2,2),np.uint8)
                 output = cv2.erode(output,kernel,iterations = 1)
-                cv2.imwrite(r'/home/pi/a.jpg', output)
+                cv2.imwrite(r'/home/pi/BTP/a.jpg', output)
                 #cv2.imshow('output2',output)
             
                 cmd = "ssocr --number-digits=-1 --charset=digits -T a.jpg"
