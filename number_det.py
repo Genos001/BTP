@@ -28,11 +28,6 @@ GPIO.setup(btn_pin, GPIO.IN)
 
 
 def speakup(val):
-    # mixer.music.load('music/' + val +'.mp3')
-    # channel = mixer.music.play()
-    # while mixer.music.get_busy():
-    #     time.sleep(0.1)
-    #subprocess.call(['vlc']+['music/'+ val +'.mp3']+['vlc://quit'])
     subprocess.call(['mpg321']+['music/'+ val +'.mp3'])
 
 speakup('tone3')
