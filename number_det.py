@@ -23,6 +23,7 @@ cap.set(4, frameHeight)
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(btn_pin, GPIO.IN)
+tries = 0
 # mixer.init()
 
 
@@ -79,6 +80,80 @@ def bird_view(image):
 
     return warped, output, err
 
+def num_det():
+    roi = image[150:450, 150:490]
+    #cv2.imshow('CAMERAa',roi)
+    #cv2.rectangle(img, (150,150), (490,450), (0,255,0), 1)
+    tries =  tries-1;
+    warped, output, err = bird_view(image)
+    if(err==0):
+        print("screen not found try again ",tries)
+
+        if(tries>0):
+            num_det()
+        else if(tries==0):
+            speakup('noscreenfound')
+            tries=tries-1;
+        continue
+    #cv2.imshow('imag',output)
+    height, width, channels = output.shape
+    x0=int(width/6)+3
+    y0=5
+    x1=width-8
+    y1=height-10
+    output = output[y0:y1, x0:x1]
+    try:
+        output = cv2.cvtColor(output, cv2.COLOR_BGR2GRAY) 
+        output = cv2.adaptiveThreshold(output, 255, cv2.ADAPTIVE_THRESH_MEAN_C, 
+                                          cv2.THRESH_BINARY, 11, 2)
+    except:
+        print("adaptive threshold error ",tries)
+        if(tries>0):
+            num_det()
+        else if(tries==0):
+            speakup('error')
+            tries=tries-1;
+        continue
+
+    cv2.imshow('output',output)
+    kernel = np.ones((4,4),np.uint8)
+    output = cv2.morphologyEx(output, cv2.MORPH_CLOSE, kernel)
+    kernel = np.ones((2,2),np.uint8)
+    output = cv2.erode(output,kernel,iterations = 1)
+    cv2.imwrite(r'/home/pi/BTP/a.jpg', output)
+    cv2.imshow('output2',output)
+
+    cmd = "ssocr --number-digits=-1 --charset=digits -T a.jpg"
+    process = Popen(shlex.split(cmd), stdout=PIPE)
+    (out, err)=process.communicate()
+    print(err)
+    #digits
+    out=out.decode("utf-8") 
+    temp = ",".join(re.findall(r'\d+', out))
+    
+    length = len(temp)
+    if(length < 3):
+        print("seg fault try again ",tries)
+        if(tries>0):
+            num_det()
+        else if(tries==0):
+            speakup('error')
+            tries=tries-1;
+        continue
+
+    indices = [0,length-2,length]
+    parts = [temp[i:j] for i,j in zip(indices, indices[1:]+[None])]
+    
+    print(temp)
+
+    speakup(str(parts[0]))
+    speakup('p'+str(parts[1]))
+    speakup('grams')
+
+
+
+
+
 while True:
     success, image = cap.read()
     time.sleep(0.1)
@@ -87,60 +162,9 @@ while True:
         if (GPIO.input(btn_pin) == False):
             time.sleep(0.4)
             if (GPIO.input(btn_pin) == True):
-
-                warped, output, err = bird_view(image)
-                if(err==0):
-                    print("screen not found try again")
-                    speakup('noscreenfound')
-                    continue
-                cv2.imshow('imag',output)
-                height, width, channels = output.shape
-                x0=int(width/6)+3
-                y0=5
-                x1=width-8
-                y1=height-10
-                output = output[y0:y1, x0:x1]
-                try:
-                    output = cv2.cvtColor(output, cv2.COLOR_BGR2GRAY)                
-                    print("applying adp")
-                    output = cv2.adaptiveThreshold(output, 255, cv2.ADAPTIVE_THRESH_MEAN_C, 
-                                                      cv2.THRESH_BINARY, 11, 2)
-                except:
-                    print("adaptive threshold error")
-                    speakup('error')
-
-                #cv2.imshow('output',output)
-                kernel = np.ones((4,4),np.uint8)
-                output = cv2.morphologyEx(output, cv2.MORPH_CLOSE, kernel)
-                kernel = np.ones((2,2),np.uint8)
-                output = cv2.erode(output,kernel,iterations = 1)
-                cv2.imwrite(r'/home/pi/BTP/a.jpg', output)
-                cv2.imshow('output2',output)
-            
-                cmd = "ssocr --number-digits=-1 --charset=digits -T a.jpg"
-                process = Popen(shlex.split(cmd), stdout=PIPE)
-                (out, err)=process.communicate()
-                print(err)
-                #digits
-                out=out.decode("utf-8") 
-                temp = ",".join(re.findall(r'\d+', out))
-                
-                length = len(temp)
-                if(length < 3):
-                    print("seg fault try again")
-                    speakup('error')
-                    continue
-
-                indices = [0,length-2,length]
-                parts = [temp[i:j] for i,j in zip(indices, indices[1:]+[None])]
-                
-                print(temp)
-                print(parts)
-
-                speakup(str(parts[0]))
-                speakup('p'+str(parts[1]))
-                speakup('grams')
-
+                tries = 3
+                num_det()
+                print("----------------------------------")
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

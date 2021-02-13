@@ -95,7 +95,7 @@ def func_mode1():
     # roi = img[150:350, 200:400]
     roi = img[50:300, 150:490]
     #cv2.imshow('CAMERAa',roi)
-    #cv2.rectangle(img, (150,100), (490,350), (0,255,0), 1)
+    #cv2.rectangle(img, (150,50), (490,300), (0,255,0), 1)
 
     hsv_frame = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
@@ -161,8 +161,9 @@ def func_mode1():
     #print (new)
 
     # cv2.rectangle(img, (309,229), (329,249), (0,255,0), 1)
-    if(margin < 500)
+    if(margin < 10):
         new='newcolorrange'
+
     if(margin < 500 and whi >=3000 ):
         new='white'
         print(whi)
