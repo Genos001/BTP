@@ -49,7 +49,7 @@ def getColorName(R,G,B):
 
 
 def func_mode2():
-    roi = img[100:350, 150:490]
+    roi = img[50:300, 150:490]
     # cv2.rectangle(img, (150,100), (490,350), (0,255,0), 1)
     hsv_frame = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
@@ -93,9 +93,9 @@ def func_mode1():
 
     
     # roi = img[150:350, 200:400]
-    roi = img[100:350, 150:490]
+    roi = img[50:300, 150:490]
     #cv2.imshow('CAMERAa',roi)
-    cv2.rectangle(img, (150,100), (490,350), (0,255,0), 1)
+    #cv2.rectangle(img, (150,100), (490,350), (0,255,0), 1)
 
     hsv_frame = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
@@ -121,8 +121,8 @@ def func_mode1():
     green = cv2.countNonZero(green_mask)
 
 
-    low_blue = np.array([95, 42, 61])
-    high_blue = np.array([112, 227, 170])
+    low_blue = np.array([95, 82, 91])
+    high_blue = np.array([122, 240, 190])
     blue_mask = cv2.inRange(hsv_frame, low_blue, high_blue)
     blue = cv2.countNonZero(blue_mask)
 
@@ -164,9 +164,7 @@ def func_mode1():
     if(margin < 500 and whi >=3000 ):
         new='white'
         print(whi)
-    else:
-        print("new color range")
-        new='tryagain'
+    
     
     print(new)
     speakup(new) 
@@ -175,11 +173,8 @@ def func_mode1():
 while True:
     success, img = cap.read()
     #cv2.rectangle(img, (200,150), (400,350), (0,255,0), 1) 
-<<<<<<< HEAD
-=======
-    cv2.rectangle(img, (150,100), (490,350), (0,255,0), 1)
+    #cv2.rectangle(img, (150,50), (490,300), (0,255,0), 1)
 
->>>>>>> d48df5adac27977eb281b8a425602412504d3c83
     time.sleep(0.1)
     if (GPIO.input(btn_pin) == False):
         time.sleep(0.01)

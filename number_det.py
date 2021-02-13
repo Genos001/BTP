@@ -28,16 +28,10 @@ GPIO.setup(btn_pin, GPIO.IN)
 
 print("darkness")
 def speakup(val):
-<<<<<<< HEAD
-    subprocess.call(['mpg321']+['music/'+ val +'.mp3'])
-
-speakup('tone3')
-=======
-    subprocess.call(['mpg321']+['/home/pi/BTP/music/'+ val +'.mp3'])
+    #subprocess.call(['mpg321']+['/home/pi/BTP/music/'+ val +'.mp3'])
     return
 
 speakup('tone4')
->>>>>>> d48df5adac27977eb281b8a425602412504d3c83
 speakup('press1')
 
 
@@ -99,7 +93,7 @@ while True:
                     print("screen not found try again")
                     speakup('noscreenfound')
                     continue
-                
+                cv2.imshow('imag',output)
                 height, width, channels = output.shape
                 x0=int(width/6)+3
                 y0=5
@@ -121,7 +115,7 @@ while True:
                 kernel = np.ones((2,2),np.uint8)
                 output = cv2.erode(output,kernel,iterations = 1)
                 cv2.imwrite(r'/home/pi/BTP/a.jpg', output)
-                #cv2.imshow('output2',output)
+                cv2.imshow('output2',output)
             
                 cmd = "ssocr --number-digits=-1 --charset=digits -T a.jpg"
                 process = Popen(shlex.split(cmd), stdout=PIPE)
@@ -151,7 +145,7 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     
-    #cv2.imshow('CAMERA',image)
+    cv2.imshow('CAMERA',image)
         
 cap.release()
 
