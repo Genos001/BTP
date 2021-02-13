@@ -161,6 +161,8 @@ def func_mode1():
     #print (new)
 
     # cv2.rectangle(img, (309,229), (329,249), (0,255,0), 1)
+    if(margin < 500)
+        new='newcolorrange'
     if(margin < 500 and whi >=3000 ):
         new='white'
         print(whi)
