@@ -31,7 +31,7 @@ def speakup(val):
     return 
 
 
-speakup('tone4')
+speakup('tone5')
 speakup('press')
 speakup('colordetectionmode')
 
@@ -49,7 +49,7 @@ def getColorName(R,G,B):
 
 
 def func_mode2():
-    roi = img[50:300, 150:490]
+    roi = img[5:300, 150:490]
     # cv2.rectangle(img, (150,100), (490,350), (0,255,0), 1)
     hsv_frame = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
@@ -85,7 +85,7 @@ def func_mode2():
 
     else:
         print("no")
-        speakup('nopaperfound') 
+        speakup('blue') 
 
 
 
@@ -93,7 +93,7 @@ def func_mode1():
 
     
     # roi = img[150:350, 200:400]
-    roi = img[50:300, 150:490]
+    roi = img[5:255, 150:490]
     #cv2.imshow('CAMERAa',roi)
     #cv2.rectangle(img, (150,50), (490,300), (0,255,0), 1)
 
@@ -104,13 +104,23 @@ def func_mode1():
     pink_mask = cv2.inRange(hsv_frame, low_pink, high_pink)
     pink = cv2.countNonZero(pink_mask)
 
-    low_vio = np.array([0, 0, 0])
-    high_vio = np.array([140, 105,75])
+    low_vio = np.array([40, 55, 25])
+    high_vio = np.array([140, 120,180])
     vio_mask = cv2.inRange(hsv_frame, low_vio, high_vio)
     vio = cv2.countNonZero(vio_mask)
+    
+    low_whe = np.array([20, 71, 116])
+    high_whe = np.array([22, 100,140])
+    whe_mask = cv2.inRange(hsv_frame, low_whe, high_whe)
+    whe = cv2.countNonZero(whe_mask)
+    
+    low_bla = np.array([40, 20, 25])
+    high_bla = np.array([140, 105,75])
+    bla_mask = cv2.inRange(hsv_frame, low_bla, high_bla)
+    bla = cv2.countNonZero(bla_mask)
 
 
-    low_yell = np.array([22, 137, 102])
+    low_yell = np.array([18, 137, 102])
     high_yell = np.array([36, 203, 190])
     yell_mask = cv2.inRange(hsv_frame, low_yell, high_yell)
     yell = cv2.countNonZero(yell_mask)
@@ -133,7 +143,7 @@ def func_mode1():
     red = cv2.countNonZero(red_mask)
 
     low_ora = np.array([2, 60, 117])
-    high_ora = np.array([29, 176, 185])
+    high_ora = np.array([10, 176, 185])
     ora_mask = cv2.inRange(hsv_frame, low_ora, high_ora)
     ora = cv2.countNonZero(ora_mask)
     
@@ -142,7 +152,7 @@ def func_mode1():
     whi_mask = cv2.inRange(hsv_frame, low_whi, high_whi)
     whi = cv2.countNonZero(whi_mask)
 
-    margin = max(pink, green, yell, red, blue, vio, ora)
+    margin = max(whe, pink, green, yell, red, blue, vio, ora, bla)
     print (margin)
     if margin==pink:
         new = "pink"
@@ -154,8 +164,12 @@ def func_mode1():
         new = "red"
     elif margin==blue:
         new = "blue"
+    elif margin==whe:
+        new = "wheatish"
     elif margin==ora:
         new = "orange"
+    elif margin==bla:
+        new = "blueblack"
     else:
         new = "violet"
     #print (new)
@@ -164,7 +178,7 @@ def func_mode1():
     if(margin < 10):
         new='newcolorrange'
 
-    if(margin < 500 and whi >=3000 ):
+    if(margin < 50 and whi >=5000 ):
         new='white'
         print(whi)
     
@@ -176,7 +190,7 @@ def func_mode1():
 while True:
     success, img = cap.read()
     #cv2.rectangle(img, (200,150), (400,350), (0,255,0), 1) 
-    #cv2.rectangle(img, (150,50), (490,300), (0,255,0), 1)
+    #cv2.rectangle(img, (150,5), (490,300), (0,255,0), 1)
 
     time.sleep(0.1)
     if (GPIO.input(btn_pin) == False):
