@@ -23,13 +23,13 @@ cap.set(4, frameHeight)
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(btn_pin, GPIO.IN)
-tries = 0
+tries = 3
 # mixer.init()
 
 
 print("darkness")
 def speakup(val):
-    #subprocess.call(['mpg321']+['/home/pi/BTP/music/'+ val +'.mp3'])
+    subprocess.call(['mpg321']+['/home/pi/BTP/music/'+ val +'.mp3'])
     return
 
 speakup('tone4')
@@ -80,7 +80,7 @@ def bird_view(image):
 
     return warped, output, err
 
-def num_det():
+def num_det(tries):
     roi = image[150:450, 150:490]
     #cv2.imshow('CAMERAa',roi)
     #cv2.rectangle(img, (150,150), (490,450), (0,255,0), 1)
@@ -88,13 +88,14 @@ def num_det():
     warped, output, err = bird_view(image)
     if(err==0):
         print("screen not found try again ",tries)
-
         if(tries>0):
-            num_det()
-        else if(tries==0):
+            num_det(tries)
+        elif(tries==0):
             speakup('noscreenfound')
             tries=tries-1;
-        continue
+        #if(True):
+        return;
+        
     #cv2.imshow('imag',output)
     height, width, channels = output.shape
     x0=int(width/6)+3
@@ -109,19 +110,19 @@ def num_det():
     except:
         print("adaptive threshold error ",tries)
         if(tries>0):
-            num_det()
-        else if(tries==0):
+            num_det(tries)
+        elif(tries==0):
             speakup('error')
             tries=tries-1;
-        continue
+        return
 
-    cv2.imshow('output',output)
+    #cv2.imshow('output',output)
     kernel = np.ones((4,4),np.uint8)
     output = cv2.morphologyEx(output, cv2.MORPH_CLOSE, kernel)
     kernel = np.ones((2,2),np.uint8)
     output = cv2.erode(output,kernel,iterations = 1)
-    cv2.imwrite(r'/home/pi/BTP/a.jpg', output)
-    cv2.imshow('output2',output)
+    cv2.imwrite(r'/home/pi/a.jpg', output)
+    #cv2.imshow('output2',output)
 
     cmd = "ssocr --number-digits=-1 --charset=digits -T a.jpg"
     process = Popen(shlex.split(cmd), stdout=PIPE)
@@ -129,17 +130,17 @@ def num_det():
     print(err)
     #digits
     out=out.decode("utf-8") 
-    temp = ",".join(re.findall(r'\d+', out))
+    temp = "".join(re.findall(r'\d+', out))
     
     length = len(temp)
     if(length < 3):
         print("seg fault try again ",tries)
         if(tries>0):
-            num_det()
-        else if(tries==0):
+            num_det(tries)
+        elif(tries==0):
             speakup('error')
             tries=tries-1;
-        continue
+        return
 
     indices = [0,length-2,length]
     parts = [temp[i:j] for i,j in zip(indices, indices[1:]+[None])]
@@ -163,13 +164,13 @@ while True:
             time.sleep(0.4)
             if (GPIO.input(btn_pin) == True):
                 tries = 3
-                num_det()
+                num_det(tries)
                 print("----------------------------------")
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     
-    cv2.imshow('CAMERA',image)
+    #cv2.imshow('CAMERA',image)
         
 cap.release()
 
