@@ -32,8 +32,8 @@ def speakup(val):
     subprocess.call(['mpg321']+['/home/pi/BTP/music/'+ val +'.mp3'])
     return
 
-speakup('tone4')
-speakup('press1')
+#speakup('tone4')
+speakup('welcome')
 
 
 def bird_view(image):
