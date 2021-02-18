@@ -11,9 +11,9 @@ import requests
 # 	print(i)
 
 
-url = 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=' +'blueblack'+ '&tl=en&total=1&idx=0&textlen=9'
+url = 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=' +'brown'+ '&tl=en&total=1&idx=0&textlen=9'
 r = requests.get(url, allow_redirects=True)
 
-open( 'blueblack.mp3', 'wb').write(r.content)
+open( 'brown.mp3', 'wb').write(r.content)
 
 print ("end")
