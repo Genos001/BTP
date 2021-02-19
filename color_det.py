@@ -65,8 +65,8 @@ def func_mode2():
     Red += cv2.countNonZero(red_mask)
 
     # Blue color
-    low_blue = np.array([30, 40, 94])
-    high_blue = np.array([154, 208, 201])
+    low_blue = np.array([30, 40, 64])
+    high_blue = np.array([134, 208, 201])
     blue_mask = cv2.inRange(hsv_frame, low_blue, high_blue)
     Blue = cv2.countNonZero(blue_mask)
     
@@ -103,6 +103,7 @@ def func_mode1(v):
     if(v>1000):
         speakup('tryagain')
         return
+    print(" ",v)
     
     # roi = img[150:350, 200:400]
     roi = img[5:255, 150:490]
@@ -117,7 +118,7 @@ def func_mode1(v):
     pink = cv2.countNonZero(pink_mask)
 
     low_vio = np.array([90-v, 55-v, 90-v])
-    high_vio = np.array([145+v, 180+v,190+v])
+    high_vio = np.array([145+v, 180+v,200+v])
     vio_mask = cv2.inRange(hsv_frame, low_vio, high_vio)
     vio = cv2.countNonZero(vio_mask)
     
@@ -127,34 +128,39 @@ def func_mode1(v):
     whe = cv2.countNonZero(whe_mask)
     
     low_bla = np.array([70-v, 20-v, 2-v])
-    high_bla = np.array([138+v, 120+v,120+v])
+    high_bla = np.array([138+v, 120+v,90+v])
     bla_mask = cv2.inRange(hsv_frame, low_bla, high_bla)
     bla = cv2.countNonZero(bla_mask)
+    
+    low_bla = np.array([0, 0, 5])
+    high_bla = np.array([2+v, 75+v,75+v])
+    bla_mask = cv2.inRange(hsv_frame, low_bla, high_bla)
+    bla += cv2.countNonZero(bla_mask)
 
 
-    low_yell = np.array([18-v, 137-v, 102-v])
+    low_yell = np.array([18-v, 92-v, 102-v])
     high_yell = np.array([30+v, 203+v, 190+v])
     yell_mask = cv2.inRange(hsv_frame, low_yell, high_yell)
     yell = cv2.countNonZero(yell_mask)
 
     low_green = np.array([35-v, 95-v, 56-v])
-    high_green = np.array([73+v, 255+v,139+v])
+    high_green = np.array([73+v, 255,139+v])
     green_mask = cv2.inRange(hsv_frame, low_green, high_green)
     green = cv2.countNonZero(green_mask)
 
 
     low_blue = np.array([95-v, 75-v, 91-v])
-    high_blue = np.array([122+v, 220+v, 190+v])
+    high_blue = np.array([110+v, 220+v, 220+v])
     blue_mask = cv2.inRange(hsv_frame, low_blue, high_blue)
     blue = cv2.countNonZero(blue_mask)
 
 
     low_red = np.array([155-v, 140-v, 140-v])
-    high_red = np.array([179+v, 255+v, 250+v])
+    high_red = np.array([179+v, 255, 250])
     red_mask = cv2.inRange(hsv_frame, low_red, high_red)
     red = cv2.countNonZero(red_mask)
 
-    low_ora = np.array([1-v, 60-v, 130-v])
+    low_ora = np.array([1-v, 20-v, 130-v])
     high_ora = np.array([8+v, 216+v, 210+v])
     ora_mask = cv2.inRange(hsv_frame, low_ora, high_ora)
     ora = cv2.countNonZero(ora_mask)
@@ -165,7 +171,7 @@ def func_mode1(v):
     whi = cv2.countNonZero(whi_mask)
     
     low_bro = np.array([1-v, 150-v, 55-v])
-    high_bro = np.array([12+v, 235+v, 136+v])
+    high_bro = np.array([18+v, 235+v, 136+v])
     bro_mask = cv2.inRange(hsv_frame, low_bro, high_bro)
     bro = cv2.countNonZero(bro_mask)
 
@@ -195,10 +201,10 @@ def func_mode1(v):
 
     # cv2.rectangle(img, (309,229), (329,249), (0,255,0), 1)
 
-    if(margin < 50 and whi >=25000 ):
+    if(margin < 200 and whi >=50000 ):
         new='white'
         print(whi)
-    if(margin < 50 and whi< 25000 ):
+    if(margin < 200 and whi< 50000 ):
         #new='newcolor'
         func_mode1(1+2*v)
         return
@@ -224,14 +230,14 @@ while True:
 
     if(st_time!=-1):
         if(time.time()-st_time>1 and time.time()-st_time<1.5):
-            print(count)
+            #print(count)
             if(count==1):
-                print(mode)
+                #print(mode)
                 if(mode):
-                    print("m1")
+                    #print("m1")
                     func_mode1(0)
                 else:
-                    print("m2")
+                    #print("m2")
                     func_mode2()
 
             else:
