@@ -160,7 +160,7 @@ def func_mode1(v):
     red_mask = cv2.inRange(hsv_frame, low_red, high_red)
     red = cv2.countNonZero(red_mask)
 
-    low_ora = np.array([4-v, 20-v, 130-v])
+    low_ora = np.array([4-v, 20-v, 140-v])
     high_ora = np.array([8+v, 216+v, 210+v])
     ora_mask = cv2.inRange(hsv_frame, low_ora, high_ora)
     ora = cv2.countNonZero(ora_mask)
@@ -170,7 +170,7 @@ def func_mode1(v):
     whi_mask = cv2.inRange(hsv_frame, low_whi, high_whi)
     whi = cv2.countNonZero(whi_mask)
     
-    low_bro = np.array([5-v, 90-v, 55-v])
+    low_bro = np.array([5-v, 100-v, 55-v])
     high_bro = np.array([22+v, 235+v, 110+v])
     bro_mask = cv2.inRange(hsv_frame, low_bro, high_bro)
     bro = cv2.countNonZero(bro_mask)
