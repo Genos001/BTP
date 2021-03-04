@@ -117,7 +117,7 @@ def func_mode1(v):
     pink_mask = cv2.inRange(hsv_frame, low_pink, high_pink)
     pink = cv2.countNonZero(pink_mask)
 
-    low_vio = np.array([110-v, 15-v, 90-v])
+    low_vio = np.array([115-v, 15-v, 90-v])
     high_vio = np.array([145+v, 170+v,200+v])
     vio_mask = cv2.inRange(hsv_frame, low_vio, high_vio)
     vio = cv2.countNonZero(vio_mask)
@@ -127,8 +127,8 @@ def func_mode1(v):
     whe_mask = cv2.inRange(hsv_frame, low_whe, high_whe)
     whe = cv2.countNonZero(whe_mask)
     
-    low_bla = np.array([70-v, 20-v, 2-v])
-    high_bla = np.array([138+v, 120+v,90+v])
+    low_bla = np.array([70-v, 15-v, 2-v])
+    high_bla = np.array([138+v, 120+v,60+v])
     bla_mask = cv2.inRange(hsv_frame, low_bla, high_bla)
     bla = cv2.countNonZero(bla_mask)
     
@@ -149,18 +149,18 @@ def func_mode1(v):
     green = cv2.countNonZero(green_mask)
 
 
-    low_blue = np.array([95-v, 38-v, 91-v])
-    high_blue = np.array([110+v, 220+v, 220+v])
+    low_blue = np.array([95-v, 60-v, 91-v])
+    high_blue = np.array([110+v, 220+v, 200+v])
     blue_mask = cv2.inRange(hsv_frame, low_blue, high_blue)
     blue = cv2.countNonZero(blue_mask)
 
 
-    low_red = np.array([155-v, 140-v, 140-v])
+    low_red = np.array([170-v, 130-v, 130-v])
     high_red = np.array([179+v, 255, 250])
     red_mask = cv2.inRange(hsv_frame, low_red, high_red)
     red = cv2.countNonZero(red_mask)
 
-    low_ora = np.array([1-v, 20-v, 130-v])
+    low_ora = np.array([4-v, 20-v, 130-v])
     high_ora = np.array([8+v, 216+v, 210+v])
     ora_mask = cv2.inRange(hsv_frame, low_ora, high_ora)
     ora = cv2.countNonZero(ora_mask)
@@ -170,8 +170,8 @@ def func_mode1(v):
     whi_mask = cv2.inRange(hsv_frame, low_whi, high_whi)
     whi = cv2.countNonZero(whi_mask)
     
-    low_bro = np.array([1-v, 150-v, 55-v])
-    high_bro = np.array([18+v, 235+v, 136+v])
+    low_bro = np.array([5-v, 90-v, 55-v])
+    high_bro = np.array([22+v, 235+v, 110+v])
     bro_mask = cv2.inRange(hsv_frame, low_bro, high_bro)
     bro = cv2.countNonZero(bro_mask)
 
