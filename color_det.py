@@ -117,8 +117,8 @@ def func_mode1(v):
     pink_mask = cv2.inRange(hsv_frame, low_pink, high_pink)
     pink = cv2.countNonZero(pink_mask)
 
-    low_vio = np.array([90-v, 55-v, 90-v])
-    high_vio = np.array([145+v, 180+v,200+v])
+    low_vio = np.array([110-v, 15-v, 90-v])
+    high_vio = np.array([145+v, 170+v,200+v])
     vio_mask = cv2.inRange(hsv_frame, low_vio, high_vio)
     vio = cv2.countNonZero(vio_mask)
     
@@ -149,7 +149,7 @@ def func_mode1(v):
     green = cv2.countNonZero(green_mask)
 
 
-    low_blue = np.array([95-v, 75-v, 91-v])
+    low_blue = np.array([95-v, 38-v, 91-v])
     high_blue = np.array([110+v, 220+v, 220+v])
     blue_mask = cv2.inRange(hsv_frame, low_blue, high_blue)
     blue = cv2.countNonZero(blue_mask)
