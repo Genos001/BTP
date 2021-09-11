@@ -1,33 +1,33 @@
-from imutils.perspective import four_point_transform
-from imutils import contours
-import imutils
-import cv2
-import numpy as np
-import time
-import RPi.GPIO as GPIO
-# from pygame import mixer
-import shlex
-import subprocess
-from subprocess import Popen, PIPE
 import re
+import cv2
+import time
+import shlex
+import imutils
+import subprocess
+import numpy as np
+import RPi.GPIO as GPIO
+from imutils import contours
+from subprocess import Popen, PIPE
+from imutils.perspective import four_point_transform
+
 
 
 
 btn_pin = 15
+mode = 1
 st_time = -1
 frameWidth = 640
 frameHeight = 480
 cap = cv2.VideoCapture(0)
 cap.set(3, frameWidth)
 cap.set(4, frameHeight)
-
+Try = 0;
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(btn_pin, GPIO.IN)
-tries = 3
 # mixer.init()
 
 
-print("darkness")
+print("start")
 def speakup(val):
     subprocess.call(['mpg321']+['/home/pi/BTP/music/'+ val +'.mp3'])
     return
@@ -41,7 +41,6 @@ def bird_view(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     edged = cv2.Canny(blurred, 220, 92, 255)
-
     cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,
                             cv2.CHAIN_APPROX_SIMPLE)
 
@@ -80,19 +79,17 @@ def bird_view(image):
 
     return warped, output, err
 
-def num_det(tries):
+def num_det():
     roi = image[150:450, 150:490]
     #cv2.imshow('CAMERAa',roi)
     #cv2.rectangle(img, (150,150), (490,450), (0,255,0), 1)
-    tries =  tries-1;
     warped, output, err = bird_view(image)
     if(err==0):
-        print("screen not found try again ",tries)
-        if(tries>0):
-            num_det(tries)
-        elif(tries==0):
+        print("screen not found",Try)
+        if(Try>2):
             speakup('noscreenfound')
-            tries=tries-1;
+        else:
+            num_det(Try)
         #if(True):
         return;
         
@@ -152,6 +149,7 @@ def num_det(tries):
     speakup('grams')
 
 
+def start_func():
 
 
 
@@ -163,8 +161,9 @@ while True:
         if (GPIO.input(btn_pin) == False):
             time.sleep(0.4)
             if (GPIO.input(btn_pin) == True):
-                tries = 3
-                num_det(tries)
+                
+                success, image = cap.read() 
+                num_det()
                 print("----------------------------------")
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
